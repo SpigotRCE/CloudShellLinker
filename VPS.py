@@ -39,8 +39,10 @@ def connect_to_server(server_host, server_port):
     for line in output_lines:
         client_socket.send(line.encode('utf-8'))
         print(line)
-        sleep(0.01)  # buffer time since cloud shell limits data transfer and can term your account
+        sleep(0.1)  # buffer time since cloud shell limits data transfer and can term your account
     client_socket.send("!!".encode('utf-8'))
+    client_socket.close()
+    print("Disconnected from the server")
 
 
 def main():
