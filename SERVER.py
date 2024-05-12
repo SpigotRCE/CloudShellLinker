@@ -72,7 +72,7 @@ def create_and_handle_server(port_ranges, ip_range, thread, timeout, server_port
     send_data = True
 
 try:
-    with open("sevrer_config.json", "r+") as f:
+    with open("server_config.json", "r+") as f:
         config = loads(f.read())
     port_range = config["port_range"]
     thread = config["thread"]
@@ -93,7 +93,7 @@ except Exception as e:
     print("Enter server port (must be open and not taken):")
     server_port = int(input())
 
-    with open("sevrer_config.json", "w") as f:
+    with open("server_config.json", "w") as f:
         f.write(dumps({"port_range": port_range, "thread": thread, "timeout": timeout, "nodes": nodes,
                        "server_port": server_port}))
 
