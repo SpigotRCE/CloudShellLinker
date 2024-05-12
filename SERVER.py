@@ -45,7 +45,7 @@ def handle_client(client_socket, client_name, port_range, ip_range, thread, time
             break
     while True:
         recv = client_socket.recv(2048).decode('utf-8')
-        if recv == "!!":
+        if str(recv) in ["!!" or ""]:
             client_socket.close()
             print(f"{client_name} has disconnected")
             break
