@@ -8,18 +8,15 @@ from json import loads, dumps
 try:
     with open("config.json", "r+") as f:
         config = loads(f.read())
-    client_name = config["client_name"]
     server_host = config["server_host"]
     server_port = config["server_port"]
-    print(f"Client Name: {client_name}")
     print(f"Server IP:Port : {server_host}:{server_port}")
 
 except Exception as e:
     print(e)
-    client_name = input("Enter client name : ")
     server_host, server_port = input("Enter server ip:port :").split(":")
     with open("config.json", "w") as f:
-        f.write(dumps({"client_name": client_name, "server_host": server_host, "server_port": server_port}))
+        f.write(dumps({"server_host": server_host, "server_port": server_port}))
 
 
 def connect_to_server(server_host, server_port):
@@ -29,7 +26,8 @@ def connect_to_server(server_host, server_port):
     if result:
         return
     print(f"Connected to the server at {server_host}:{server_port}")
-    client_socket.send(client_name.encode('utf-8'))
+    client_name = client_socket.recv(1024).decode('utf-8')
+    print(f"Client name: {client_name}")
 
     port_range, ip_range, thread, timeout = client_socket.recv(1024).decode('utf-8').split("??<><>")
     command = f"java -Dfile.encoding=UTF-8 -jar qubo.jar -range {ip_range} -ports {port_range} -th {thread} -ti {timeout}"
@@ -38,8 +36,8 @@ def connect_to_server(server_host, server_port):
 
     for line in output_lines:
         client_socket.send(line.encode('utf-8'))
-        print(line)
-        sleep(0.1)  # buffer time since cloud shell limits data transfer and can term your account
+        print(client_socket.recv(4096).decode('utf-8'))
+        sleep(0.05)
     client_socket.send("!!".encode('utf-8'))
     client_socket.close()
     print("Disconnected from the server")
