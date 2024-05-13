@@ -75,7 +75,7 @@ def create_and_handle_server(port_ranges, ip_range, thread, timeout, server_port
     print(scan_id)
     for i in range(nodes):
         client_socket, client_address = server_socket.accept()
-        client_name = f"CLIENT_{encode_base64(client_address[0] + encode_base64(str(random.randbytes(2)) + str(client_address[1])))}"
+        client_name = f"CLIENT_{encode_base64(client_address[0])}_{i + 1}"
         client_socket.send(client_name.encode('utf-8'))
         print(f"Connection from {client_address[0]}:{client_address[1]}/{client_name}")
 
